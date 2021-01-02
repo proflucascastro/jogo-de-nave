@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Nave</title>
+    <script src="js/animacao.js"></script>
+    <script src="js/teclado.js"></script>
+    <script src="js/fundo.js"></script>
+    <script src="js/nave.js"></script>
+    <script src="js/tiro.js"></script>
+    <script src="js/ovni.js"></script>
+    <script src="js/colisor.js"></script>
+    <script src="js/spritesheet.js"></script>
+    <script src="js/vidas.js"></script>
+    <script src="js/niveis.js"></script>
+</head>
+
+<body>
+    <style>
+        canvas {
+            padding: 0;
+            margin: auto;
+            display: block;
+            width: 600px;
+            height: 600px;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+    </style>
+    <canvas id="jogo" width="500" height="500"></canvas>
+    <script>
+        let carregadas = 0;
+        let VELOCIDADE = 1;
+        let listaImagens = ['fundo-nuvens', 'fundo-espaco', 'fundo-estrelas', 'nave', 'ovni', 'explosao'];
+        let listaSons = ['explosao', 'musica-acao', 'tiro'];
+        const TOTAL_VIDAS = 3;
+
+        const imagens = carregarImagens(listaImagens);
+        const sons = carregarSons(listaSons);
+
+        function carregarImagens(listaImagens) {
+            const limagens = []
+            listaImagens.forEach((img) => {
+                limagens[img] = new Image();
+                limagens[img].src = 'img/' + img + '.png';
+                limagens[img].onload = carregando;
+            });
+            return limagens;
+        }
+
+        function carregarSons(listaSons) {
+            const sons = [];
+            listaSons.forEach((som) => {
+                sons[som] = new Audio('snd/' + som + '.mp3');
+                sons[som].load();
+            });
+            return sons;
+        }
+
+        function carregando() {
+            carregadas++
+            if (carregadas == listaImagens.length) iniciar();
+        }
+
+        function iniciar() {
+            const canvas = document.getElementById('jogo');
+            const contexto = canvas.getContext('2d');
+
+            const animacao = new Animacao(contexto);
+            const teclado = new Teclado(document);
+            const colisor = new Colisor(animacao);
+
+            const fundoEspaco = new Fundo(contexto, imagens['fundo-espaco'], 0.5 * VELOCIDADE);
+            animacao.novoSprite(fundoEspaco);
+
+            const fundoEstrelas = new Fundo(contexto, imagens['fundo-estrelas'], 0.8 * VELOCIDADE);
+            animacao.novoSprite(fundoEstrelas);
+
+            const fundoNuvens = new Fundo(contexto, imagens['fundo-nuvens'], 1.2 * VELOCIDADE);
+            animacao.novoSprite(fundoNuvens);
+
+            const nave = new Nave(contexto, teclado, imagens['nave'], 3 * VELOCIDADE);
+            animacao.novoSprite(nave);
+
+            const vidas = new Vidas(nave, 20, 20, 15, 'yellow');
+            animacao.novoSprite(vidas);
+
+            const niveis = new Niveis(contexto, nave);
+            animacao.novoSprite(niveis);
+
+            colisor.novoPar(Nave.name, Ovni.name, function (par) {
+                sons.explosao.currentTime = 0;
+                sons.explosao.volume = 0.2;
+                sons.explosao.play();
+
+                par.sprite1.colidiu();
+            });
+
+            colisor.novoPar(Tiro.name, Ovni.name, function (par) {
+                par.sprite1.colidiu();
+                par.sprite2.colidiu();
+                niveis.diminuiOvni();
+            });
+
+            teclado.disparou(BARRA_DE_ESPACO, () => {
+                if (animacao.ligado) {
+                    return nave.atirar(colisor);
+                }
+            });
+
+            teclado.disparou(ENTER, () => animacao.pausar('Pausado', 50));
+
+            const ovni = new Ovni(contexto, imagens['ovni']);
+            animacao.novoProcessamento(() => ovni.novoOvni(animacao, colisor));
+            animacao.novoProcessamento(() => colisor.processar());
+
+            animacao.sprites.forEach(sprite => sprite.desenhar());
+            animacao.pausar('Enter = Iniciar | Espaco = Atirar', 25, true);
+            
+        }
+
+    </script>
+</body>
+
+</html>
