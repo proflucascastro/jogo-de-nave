@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codigo Tecla</title>
+</head>
+
+<body>
+    <h1>Codigo Teclado</h1>
+    <p id='codigo'></p>
+    <script>
+        window.addEventListener('keydown', function (e) {
+            console.log(e.key);
+            console.log(e.keyCode);
+            const codigo = document.getElementById('codigo');
+            codigo.innerHTML += '<BR /> Tecla [' + e.key + '] Código ' + e.keyCode;
+        });
+    </script>
+</body>
+
+</html>
