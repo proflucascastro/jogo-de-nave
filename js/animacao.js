@@ -37,7 +37,7 @@ class Animacao {
 
         if (this.gameOver) {
             for (let spt of this.sprites) {
-                if (spt.nome == Nave.name) spt.vidas = TOTAL_VIDAS;
+                if (spt.nome == Nave.name) spt.reiniciar();
                 if (spt.nome == Niveis.name) spt.reiniciar();
             }
             this.gameOver = false;

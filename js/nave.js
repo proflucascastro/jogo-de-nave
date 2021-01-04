@@ -19,16 +19,25 @@ class Nave {
         this.y = this.contexto.canvas.height - this.imagem.height - 15;
     }
 
+    reiniciar() {
+        VELOCIDADE = 1;
+        this.vidas = TOTAL_VIDAS;
+        this.velocidade = 3
+        this.posicionar();
+    }
+
     colidiu() {
         this.vidas--;
         if (this.vidas == 0) {
             this.animacao.gameOver = true;
             this.animacao.pausar('Game Over', 40, true);
+            const nome = confirm("Qual o seu nome?");
         } else {
             this.animacao.pausar('Enter para continuar', 30, true);
         }
         for (let spt of this.animacao.sprites) {
             spt.excluir = (spt.nome == Ovni.name);
+            spt.excluir = (spt.nome == TiroOvni.name);
         }
         this.posicionar();
     }

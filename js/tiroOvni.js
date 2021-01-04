@@ -1,4 +1,4 @@
-class Tiro {
+class TiroOvni {
     constructor(contexto, x, y, raio, cor, velocidadeX, velocidadeY, som = true) {
         this.contexto = contexto;
         this.x = x;
@@ -20,7 +20,7 @@ class Tiro {
     }
 
     get nome() {
-        return Tiro.name;
+        return TiroOvni.name;
     }
 
     desenhar(){

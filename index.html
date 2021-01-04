@@ -11,6 +11,7 @@
     <script src="js/nave.js"></script>
     <script src="js/tiro.js"></script>
     <script src="js/ovni.js"></script>
+    <script src="js/tiroOvni.js"></script>
     <script src="js/colisor.js"></script>
     <script src="js/spritesheet.js"></script>
     <script src="js/vidas.js"></script>
@@ -39,6 +40,17 @@
         let listaImagens = ['fundo-nuvens', 'fundo-espaco', 'fundo-estrelas', 'nave', 'ovni', 'explosao'];
         let listaSons = ['explosao', 'musica-acao', 'tiro'];
         const TOTAL_VIDAS = 3;
+        const canvas = document.getElementById('jogo');
+        const contexto = canvas.getContext('2d');
+        let animacao;
+        let teclado;
+        let colisor;
+        let fundoEspaco;
+        let fundoEstrelas;
+        let fundoNuvens;
+        let nave;
+        let vidas;
+        let niveis;
 
         const imagens = carregarImagens(listaImagens);
         const sons = carregarSons(listaSons);
@@ -68,8 +80,6 @@
         }
 
         function iniciar() {
-            const canvas = document.getElementById('jogo');
-            const contexto = canvas.getContext('2d');
 
             const animacao = new Animacao(contexto);
             const teclado = new Teclado(document);
@@ -101,6 +111,14 @@
                 par.sprite1.colidiu();
             });
 
+            colisor.novoPar(Nave.name, TiroOvni.name, function (par) {
+                sons.explosao.currentTime = 0;
+                sons.explosao.volume = 0.2;
+                sons.explosao.play();
+
+                par.sprite1.colidiu();
+            });
+
             colisor.novoPar(Tiro.name, Ovni.name, function (par) {
                 par.sprite1.colidiu();
                 par.sprite2.colidiu();
@@ -115,7 +133,7 @@
 
             teclado.disparou(ENTER, () => animacao.pausar('Pausado', 50));
 
-            const ovni = new Ovni(contexto, imagens['ovni']);
+            const ovni = new Ovni(contexto, colisor, imagens['ovni']);
             animacao.novoProcessamento(() => ovni.novoOvni(animacao, colisor));
             animacao.novoProcessamento(() => colisor.processar());
 

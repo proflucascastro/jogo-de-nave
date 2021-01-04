@@ -41,7 +41,7 @@ class Niveis {
             this.nivel++;
             this.ovnis = 0;
             VELOCIDADE = this.nivel;
-            this.nave.velocidade *= (1 + VELOCIDADE/5);
+            this.nave.velocidade *= (1 + VELOCIDADE/50);
         } 
 
     }
