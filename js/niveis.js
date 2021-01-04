@@ -30,7 +30,7 @@ class Niveis {
         this.contexto.fillText(`Pontos: ${this.pontos} `, this.contexto.canvas.width, 50);
 
         this.contexto.font = '  10px Arial';
-        this.contexto.fillText(`Desenvolvido por Lucas Castro - estudo do livro "Desenvolva jogos com HTML5 Canvas e JavaScprit `, this.contexto.canvas.width, this.contexto.canvas.height-5);;
+        this.contexto.fillText(`Desenvolvido por Lucas Castro - estudo do livro "Desenvolva jogos com HTML5 Canvas e JavaScprit (v 0.2.1)`, this.contexto.canvas.width, this.contexto.canvas.height-5);;
         this.contexto.restore();
     }
 
